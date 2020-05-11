@@ -11,23 +11,9 @@ class BookShelfChanger extends React.Component {
     moveToShelf: PropTypes.func.isRequired,
   };
 
-  mapping = {
-    currentlyReading: 'Currently Reading',
-    wantToRead: 'Want to Read',
-    read: 'Read',
-    none: 'None',
-  };
-
   onSelectShelf = (e) => {
-    this.props.moveToShelf(this.mapping[e.target.value]);
-    this.setState({shelf: this.mapping[e.target.value]});
-  };
-
-  getSelectValue = () => {
-    const invMapping = {};
-    Object.keys(this.mapping).forEach(k => invMapping[this.mapping[k]] = k);
-
-    return invMapping[this.state.shelf];
+    this.props.moveToShelf(e.target.value);
+    this.setState({shelf: e.target.value});
   };
 
   render() {
@@ -35,7 +21,7 @@ class BookShelfChanger extends React.Component {
       <div className="book-shelf-changer">
         <select
           onChange={this.onSelectShelf}
-          value={this.getSelectValue()}
+          value={this.state.shelf}
         >
           <option value="move" disabled>Move to...</option>
           <option value="currentlyReading">Currently Reading</option>
