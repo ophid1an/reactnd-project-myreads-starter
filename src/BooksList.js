@@ -49,13 +49,39 @@ class BooksList extends Component {
     ]
   };
 
+  shelves = [
+    'Currently Reading',
+    'Want to Read',
+    'Read',
+  ];
+
+  moveBookToShelf = bookTitle => shelfTitle => {
+    this.setState(prevState => {
+      const books = prevState.books;
+
+      for (let i=0; i < books.length; i++) {
+        if (bookTitle === books[i].title && shelfTitle !== books[i].shelf) {
+          return 'None' !== shelfTitle ?
+            {
+              books: [
+                ...books.slice(0, i),
+                {...books[i], shelf: shelfTitle},
+                ...books.slice(i+1, books.length)
+              ]
+            } :
+            {
+              books: [
+                ...books.slice(0, i),
+                ...books.slice(i+1, books.length)
+              ]
+            }
+        }
+      }
+    });
+  };
+
   render() {
     const { books } = this.state;
-    const shelfs = [
-      'Currently Reading',
-      'Want to Read',
-      'Read',
-    ];
 
     return (
       <div className="list-books">
@@ -64,8 +90,8 @@ class BooksList extends Component {
         </div>
         <div className="list-books-content">
           <div>
-            {shelfs.map(s => (
-              <BookShelf key={s} shelfTitle={s} books={books} />
+            {this.shelves.map(s => (
+              <BookShelf key={s} shelfTitle={s} books={books} moveBookToShelf={this.moveBookToShelf} />
             ))}
           </div>
         </div>
