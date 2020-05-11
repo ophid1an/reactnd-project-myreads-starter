@@ -20,9 +20,8 @@ const BooksList = ({ books, moveBookToShelf }) => {
           {shelves.map(s => (
             <BookShelf
               key={s.id}
-              shelfId = {s.id}
               shelfTitle={s.title}
-              books={books}
+              books={books.filter(b => s.id === b.shelf)}
               moveBookToShelf={moveBookToShelf}
             />
           ))}
