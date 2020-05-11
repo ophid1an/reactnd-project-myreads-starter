@@ -26,28 +26,29 @@ class BooksApp extends React.Component {
   }
 
   moveBookToShelf = bookId => shelfId => {
-    this.setState(prevState => {
-      const books = prevState.books;
+    BooksAPI.update({id: bookId}, shelfId)
+      .then(() => this.setState(prevState => {
+        const books = prevState.books;
 
-      for (let i=0; i < books.length; i++) {
-        if (bookId === books[i].id && shelfId !== books[i].shelf) {
-          return 'none' !== shelfId ?
-            {
-              books: [
-                ...books.slice(0, i),
-                {...books[i], shelf: shelfId},
-                ...books.slice(i+1, books.length)
-              ]
-            } :
-            {
-              books: [
-                ...books.slice(0, i),
-                ...books.slice(i+1, books.length)
-              ]
-            }
+        for (let i=0; i < books.length; i++) {
+          if (bookId === books[i].id && shelfId !== books[i].shelf) {
+            return 'none' !== shelfId ?
+              {
+                books: [
+                  ...books.slice(0, i),
+                  {...books[i], shelf: shelfId},
+                  ...books.slice(i+1, books.length)
+                ]
+              } :
+              {
+                books: [
+                  ...books.slice(0, i),
+                  ...books.slice(i+1, books.length)
+                ]
+              }
+          }
         }
-      }
-    });
+      }));
   };
 
   render() {
