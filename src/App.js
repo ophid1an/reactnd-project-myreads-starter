@@ -3,8 +3,53 @@ import './App.css'
 import { Route } from 'react-router-dom';
 import BooksSearch from "./BooksSearch";
 import BooksList from "./BooksList";
+import * as BooksAPI from './BooksAPI';
 
 class BooksApp extends React.Component {
+  state = {
+    books: [],
+  };
+
+  componentDidMount() {
+    BooksAPI.getAll()
+      .then(res => {
+        this.setState({
+          books: res.map(({id, shelf, imageLinks, title, authors,}) => ({
+            id,
+            shelf,
+            cover: imageLinks.thumbnail,
+            title,
+            authors,
+          }))
+        })
+      });
+  }
+
+  moveBookToShelf = bookId => shelfId => {
+    this.setState(prevState => {
+      const books = prevState.books;
+
+      for (let i=0; i < books.length; i++) {
+        if (bookId === books[i].id && shelfId !== books[i].shelf) {
+          return 'none' !== shelfId ?
+            {
+              books: [
+                ...books.slice(0, i),
+                {...books[i], shelf: shelfId},
+                ...books.slice(i+1, books.length)
+              ]
+            } :
+            {
+              books: [
+                ...books.slice(0, i),
+                ...books.slice(i+1, books.length)
+              ]
+            }
+        }
+      }
+    });
+  };
+
   render() {
     return (
       <div className="app">
@@ -12,7 +57,10 @@ class BooksApp extends React.Component {
           <BooksSearch />
         </Route>
         <Route exact path='/'>
-          <BooksList />
+          <BooksList
+            books={this.state.books}
+            moveBookToShelf={this.moveBookToShelf}
+          />
         </Route>
       </div>
     )
