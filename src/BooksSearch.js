@@ -17,7 +17,7 @@ class BooksSearch extends React.Component {
     this.setState({
       results: data.error ? [] : data.map(({id, imageLinks, title, authors = [],}) => ({
         id,
-        cover: imageLinks.thumbnail,
+        cover: imageLinks ? imageLinks.thumbnail : '',
         title,
         authors,
         shelf: this.props.booksMap.get(id) || 'none',

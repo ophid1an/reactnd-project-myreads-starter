@@ -17,7 +17,7 @@ class BooksApp extends React.Component {
           books: res.map(({id, shelf, imageLinks, title, authors = [],}) => ({
             id,
             shelf,
-            cover: imageLinks.thumbnail,
+            cover: imageLinks ? imageLinks.thumbnail : '',
             title,
             authors,
           }))
