@@ -16,16 +16,14 @@ const BooksList = ({ books, moveBookToShelf }) => {
         <h1>MyReads</h1>
       </div>
       <div className="list-books-content">
-        <div>
-          {shelves.map(s => (
-            <BookShelf
-              key={s.id}
-              shelfTitle={s.title}
-              books={books.filter(b => s.id === b.shelf)}
-              moveBookToShelf={moveBookToShelf}
-            />
-          ))}
-        </div>
+        {shelves.map(s => (
+          <BookShelf
+            key={s.id}
+            shelfTitle={s.title}
+            books={books.filter(b => s.id === b.shelf)}
+            moveBookToShelf={moveBookToShelf}
+          />
+        ))}
       </div>
       <div className="open-search">
         <Link to='/search'>Add a book</Link>

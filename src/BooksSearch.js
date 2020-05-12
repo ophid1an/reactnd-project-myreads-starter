@@ -1,34 +1,44 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
+import BooksSearchBar from "./BooksSearchBar";
+import BooksSearchResults from "./BooksSearchResults";
 
-const BooksSearch = props => {
-  return (
-    <div className="search-books">
-      <div className="search-books-bar">
-        <Link className="close-search" to='/'>Close</Link>
-        <div className="search-books-input-wrapper">
-          {/*
-                NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                You can find these search terms here:
-                https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
+class BooksSearch extends React.Component {
+  state = {
+    results: [],
+  }
 
-                However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                you don't find a specific author or title. Every search is limited by search terms.
-              */}
-          <input type="text" placeholder="Search by title or author"/>
+  static propTypes = {
+    booksMap: PropTypes.object.isRequired,
+    moveBookToShelf: PropTypes.func.isRequired,
+  };
 
-        </div>
+  setResults = (data) => {
+    this.setState({
+      results: data.error ? [] : data.map(({id, imageLinks, title, authors = [],}) => ({
+        id,
+        cover: imageLinks.thumbnail,
+        title,
+        authors,
+        shelf: this.props.booksMap.get(id) || 'none',
+      })),
+    });
+
+  }
+
+  render() {
+    const { moveBookToShelf } = this.props;
+
+    return (
+      <div className="search-books">
+        <BooksSearchBar setResults={this.setResults} />
+        <BooksSearchResults
+          books={this.state.results}
+          moveBookToShelf={moveBookToShelf}
+        />
       </div>
-      <div className="search-books-results">
-        <ol className="books-grid"></ol>
-      </div>
-    </div>
-  );
-};
-
-BooksSearch.propTypes = {
-
-};
+    );
+  }
+}
 
 export default BooksSearch;
