@@ -16,15 +16,17 @@ class BooksSearchBar extends React.Component {
     const query = e.target.value;
     this.setState({ query });
 
-    if (query.length > 2) {
-      if (this.timerId) {
-        clearTimeout(this.timerId);
-      }
-      this.timerId = setTimeout(() =>
-        BooksAPI.search(query)
-          .then(res => this.props.setResults(res))
-      , 500);
+    if (this.timerId) {
+      clearTimeout(this.timerId);
     }
+    if ('' === query) {
+      return this.props.setResults([]);
+    }
+
+    this.timerId = setTimeout(() =>
+      BooksAPI.search(query)
+        .then(res => this.props.setResults(res))
+    , 500);
   }
 
   render() {
